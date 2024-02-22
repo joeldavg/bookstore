@@ -12,16 +12,16 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class Book {
 
+    private Long id;
     private String title;
     private String subtitle;
     private String authors;
     private String publisher;
-    private String id;
-    private String pages;
-    private String year;
-    private String rating;
+    private int pages;
+    private int year;
+    private byte rating;
     private String desc;
-    private String price;
+    private float price;
     private String image;
     private String url;
 
