@@ -1,4 +1,4 @@
-package co.com.bancolombia.r2dbc.repository.helper;
+package co.com.bancolombia.r2dbc.helper;
 
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.data.domain.Example;

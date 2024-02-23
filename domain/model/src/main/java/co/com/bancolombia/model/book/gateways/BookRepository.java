@@ -6,10 +6,11 @@ import reactor.core.publisher.Mono;
 
 public interface BookRepository {
 
-    Flux<Book> findBooksContainsTitle(String title);
+    Flux<Book> findBooksContainingTitle(String title);
     Mono<Book> findBookById(long id);
-    Mono<Book> updateBook(long id, Book book);
-    Mono<Book> createBook(Book book);
+    Mono<Book> updateBook(Book bookToUpdate);
+    Mono<Book> createBook(Book bookToCreate);
     Mono<Void> deleteBookById(long id);
+    Flux<Book> findALlBooks();
 
 }

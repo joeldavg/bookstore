@@ -20,7 +20,7 @@ public class PostgreSQLConnectionPool {
 	public ConnectionPool getConnectionConfig() {
         // TODO: change these properties for yours
 		PostgresqlConnectionProperties pgProperties = new PostgresqlConnectionProperties();
-		pgProperties.setDatabase("postgres");
+		pgProperties.setDatabase("bookstore");
 		pgProperties.setHost("localhost");
 		pgProperties.setPort(5432);
 		pgProperties.setUsername("postgres");

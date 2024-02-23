@@ -1,10 +1,10 @@
-package co.com.bancolombia.r2dbc;
+package co.com.bancolombia.r2dbc.book.adapter;
 
 import co.com.bancolombia.model.book.Book;
 import co.com.bancolombia.model.book.gateways.BookRepository;
-import co.com.bancolombia.r2dbc.entity.BookEntity;
-import co.com.bancolombia.r2dbc.repository.helper.ReactiveAdapterOperations;
-import co.com.bancolombia.r2dbc.repository.BookReactiveRepository;
+import co.com.bancolombia.r2dbc.book.entity.BookEntity;
+import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
+import co.com.bancolombia.r2dbc.book.repository.BookReactiveRepository;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -19,8 +19,8 @@ public class BookReactiveRepositoryAdapter extends ReactiveAdapterOperations<Boo
     }
 
     @Override
-    public Flux<Book> findBooksContainsTitle(String title) {
-        return repository.findBooksContainsTitle(title)
+    public Flux<Book> findBooksContainingTitle(String title) {
+        return super.repository.findByTitleContainingIgnoreCase(title)
                 .map(super::toEntity);
     }
 
@@ -30,17 +30,22 @@ public class BookReactiveRepositoryAdapter extends ReactiveAdapterOperations<Boo
     }
 
     @Override
-    public Mono<Book> updateBook(long id, Book book) {
-        return null;
+    public Mono<Book> updateBook(Book bookToUpdate) {
+        return super.save(bookToUpdate);
     }
 
     @Override
-    public Mono<Book> createBook(Book book) {
-        return super.save(book);
+    public Mono<Book> createBook(Book bookToCreate) {
+        return super.save(bookToCreate);
     }
 
     @Override
     public Mono<Void> deleteBookById(long id) {
         return super.deleteById(id);
+    }
+
+    @Override
+    public Flux<Book> findALlBooks() {
+        return super.findAll();
     }
 }

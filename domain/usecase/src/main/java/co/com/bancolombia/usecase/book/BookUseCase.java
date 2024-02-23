@@ -10,24 +10,33 @@ import reactor.core.publisher.Mono;
 public class BookUseCase {
 
     private final BookRepository bookRepository;
+
+    public Flux<Book> findAllBooks() {
+        return bookRepository.findALlBooks();
+    }
     
-    public Flux<Book> findBooksContainsTitle(String title) {
-        return bookRepository.findBooksContainsTitle(title);
+    public Flux<Book> findBooksContainingTitle(String title) {
+        return bookRepository.findBooksContainingTitle(title);
     }
 
-    public Mono<Book> findBookById(String id) {
+    public Mono<Book> findBookById(long id) {
         return bookRepository.findBookById(id);
     }
 
-    public Mono<Book> updateBook(String id, Book book) {
-        return bookRepository.updateBook(id, book);
+    public Mono<Book> updateBook(long id, Book bookToUpdateRequest) {
+        this.findBookById(id)
+                .map(bookRepository::updateBook);
+        return bookRepository.updateBook(bookToUpdateRequest);
     }
 
-    public Mono<Book> createBook(Book book) {
-        return bookRepository.createBook(book);
+    public Mono<Book> createBook(Book bookToCreate) {
+        return bookRepository.createBook(bookToCreate);
     }
 
-    public Mono<Void> deleteBookById(String id) {
-        return bookRepository.deleteBookById(id);
+    public Mono<Boolean> deleteBookById(long id) {
+        return this.findBookById(id)
+                .flatMap(book ->  bookRepository.deleteBookById(book.getId())
+                        .thenReturn(Boolean.TRUE))
+                .defaultIfEmpty(Boolean.FALSE);
     }
 }
