@@ -19,8 +19,11 @@ public class BookHandler {
     private final IBookMapper mapper;
 
     public Mono<ServerResponse> listenGETFindBookById(ServerRequest serverRequest) {
-        var id = serverRequest.pathVariable("id");
-        var bookId = Long.parseLong(id);
+        var idString = serverRequest.pathVariable("id");
+        if (!idString.matches("^[0-9]+$")) {
+            return ServerResponse.badRequest().build();
+        }
+        var bookId = Long.parseLong(idString);
         return bookUseCase.findBookById(bookId)
                 .map(mapper::toBookSearchByIdResponse)
                 .flatMap(ServerResponse.ok()::bodyValue)
@@ -38,7 +41,7 @@ public class BookHandler {
                 .collectList()
                 .flatMap(books -> {
                     if (books.isEmpty()) {
-                        return ServerResponse.noContent().build();
+                        return ServerResponse.notFound().build();
                     }
                     return ServerResponse.ok().bodyValue(books);
                 });
@@ -53,8 +56,11 @@ public class BookHandler {
     }
 
     public Mono<ServerResponse> listenDELETEDeleteBookById(ServerRequest serverRequest) {
-        var id = serverRequest.pathVariable("id");
-        var bookId = Long.parseLong(id);
+        var idString = serverRequest.pathVariable("id");
+        if (!idString.matches("^[0-9]+$")) {
+            return ServerResponse.badRequest().build();
+        }
+        var bookId = Long.parseLong(idString);
         return bookUseCase.deleteBookById(bookId)
                 .flatMap(value -> {
                     if (value) {
@@ -68,11 +74,6 @@ public class BookHandler {
         return bookUseCase.findAllBooks()
                 .map(mapper::toBookSearchByIdResponse)
                 .collectList()
-                .flatMap(books -> {
-                    if (books.isEmpty()) {
-                        return ServerResponse.noContent().build();
-                    }
-                    return ServerResponse.ok().bodyValue(books);
-                });
+                .flatMap(ServerResponse.ok()::bodyValue);
     }
 }
