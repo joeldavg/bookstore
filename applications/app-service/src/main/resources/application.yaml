@@ -7,7 +7,16 @@ spring:
   devtools:
     add-properties: false
   profiles:
-    include: null
+    active: default
+
+adapters:
+  postgres:
+    database: "bookstore_iw3k"
+    schema: "bookstore"
+    username: "bookstore_iw3k_user"
+    password: "ve9EPe42ynzbTPh99GhjDYIHvGKDEGSe"
+    host: "dpg-cne8pt8l5elc73f52i50-a.oregon-postgres.render.com"
+    port: 5432
 
 management:
   endpoints:

@@ -334,3 +334,6 @@ gradle-app.setting
 # -----
 *.hprof
 
+# Local application config
+applications/app-service/src/main/resources/application-local.yaml
+

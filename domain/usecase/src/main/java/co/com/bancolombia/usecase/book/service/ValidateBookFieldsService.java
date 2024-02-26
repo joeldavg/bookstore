@@ -67,6 +67,9 @@ public class ValidateBookFieldsService {
         if (book.getDesc() == null || book.getDesc().isBlank()) {
             throw new BookException(UserErrorMessage.BOOK_DESCRIPTION_ERROR_MESSAGE);
         }
+        if (book.getDesc().length() > 255) {
+            throw new BookException(UserErrorMessage.BOOK_DESCRIPTION_LENGTH_ERROR_MESSAGE);
+        }
     }
 
     private void validateBookPrice(Book book) {

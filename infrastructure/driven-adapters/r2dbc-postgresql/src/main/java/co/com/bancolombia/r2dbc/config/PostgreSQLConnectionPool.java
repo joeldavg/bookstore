@@ -16,16 +16,8 @@ public class PostgreSQLConnectionPool {
     public static final int MAX_IDLE_TIME = 30;
 
 	@Bean
-	public ConnectionPool getConnectionConfig() {
-		PostgresqlConnectionProperties pgProperties = new PostgresqlConnectionProperties();
-		pgProperties.setDatabase("bookstore");
-		pgProperties.setHost("localhost");
-		pgProperties.setPort(5432);
-		pgProperties.setUsername("postgres");
-		pgProperties.setPassword("root");
-		pgProperties.setSchema("bookstore");
-
-		return buildConnectionConfiguration(pgProperties);
+	public ConnectionPool getConnectionConfig(PostgresqlConnectionProperties properties) {
+		return buildConnectionConfiguration(properties);
 	}
 
 	private ConnectionPool buildConnectionConfiguration(PostgresqlConnectionProperties properties) {
@@ -36,6 +28,7 @@ public class PostgreSQLConnectionPool {
 				.schema(properties.getSchema())
 				.username(properties.getUsername())
 				.password(properties.getPassword())
+				.enableSsl()
 				.build();
 
         ConnectionPoolConfiguration poolConfiguration = ConnectionPoolConfiguration.builder()
