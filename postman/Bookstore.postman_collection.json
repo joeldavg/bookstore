@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "7860c40e-03b2-4cc4-8fd4-3f8ea54942a4",
+		"name": "Bookstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29842601"
+	},
+	"item": [
+		{
+			"name": "Get Book Detail By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/bookstore/search/book/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookstore",
+						"search",
+						"book",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Books Containing Title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/bookstore/search/books/?title=de",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookstore",
+						"search",
+						"books",
+						""
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "de"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Book by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/bookstore/delete/book/22",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookstore",
+						"delete",
+						"book",
+						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new Book",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Code Complete\",\r\n    \"subtitle\": \"A Practical Handbook of Software Construction\",\r\n    \"authors\": \"Steve McConnell\",\r\n    \"publisher\": \"Microsoft Press\",\r\n    \"pages\": 960,\r\n    \"year\": 2004,\r\n    \"rating\": 5,\r\n    \"desc\": \"Code Complete es un libro extenso que cubre todas las etapas del desarrollo de software, desde la planificación hasta el mantenimiento. Escrito por Steve McConnell, este libro es una referencia valiosa para desarrolladores de todos los niveles de experiencia.\",\r\n    \"price\": 35.00,\r\n    \"image\": \"code_complete.jpg\",\r\n    \"url\": \"https://www.example.com/books/code-complete\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/bookstore/save/book",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookstore",
+						"save",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Book",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Clean Code\",\r\n    \"subtitle\": \"A Handbook of Agile Software Craftsmanship\",\r\n    \"authors\": \" Robert C. Martin\",\r\n    \"publisher\": \"Prentice Hall\",\r\n    \"pages\": 464,\r\n    \"year\": 2008,\r\n    \"rating\": 5,\r\n    \"desc\": \" Clean Code es un libro sobre desarrollo de software escrito por Robert C. Martin, también conocido como 'Uncle Bob'. El libro presenta prácticas y principios para escribir código limpio y mantenible.\",\r\n    \"price\": 30.0,\r\n    \"image\": \"clean_code.jpg\",\r\n    \"url\": \"https://www.example.com/books/clean-code\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/bookstore/update/book/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookstore",
+						"update",
+						"book",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
