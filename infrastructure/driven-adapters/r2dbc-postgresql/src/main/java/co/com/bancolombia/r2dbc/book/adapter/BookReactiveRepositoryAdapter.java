@@ -44,8 +44,4 @@ public class BookReactiveRepositoryAdapter extends ReactiveAdapterOperations<Boo
         return super.deleteById(id);
     }
 
-    @Override
-    public Flux<Book> findALlBooks() {
-        return super.findAll();
-    }
 }

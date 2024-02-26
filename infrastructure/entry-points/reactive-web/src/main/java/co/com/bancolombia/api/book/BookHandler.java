@@ -1,7 +1,10 @@
 package co.com.bancolombia.api.book;
 
 import co.com.bancolombia.api.book.dto.request.BookCreateRequest;
+import co.com.bancolombia.api.book.dto.request.BookUpdateRequest;
+import co.com.bancolombia.api.book.dto.response.ErrorResponse;
 import co.com.bancolombia.api.book.mapper.IBookMapper;
+import co.com.bancolombia.model.book.exception.BookException;
 import co.com.bancolombia.usecase.book.BookUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,9 +26,9 @@ public class BookHandler {
         if (!idString.matches("^[0-9]+$")) {
             return ServerResponse.badRequest().build();
         }
-        var bookId = Long.parseLong(idString);
-        return bookUseCase.findBookById(bookId)
-                .map(mapper::toBookSearchByIdResponse)
+        var id = Long.parseLong(idString);
+        return bookUseCase.findBookById(id)
+                .map(mapper::toBookDetailResponse)
                 .flatMap(ServerResponse.ok()::bodyValue)
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
@@ -37,7 +40,7 @@ public class BookHandler {
         }
         var title = titleOptional.get();
         return bookUseCase.findBooksContainingTitle(title)
-                .map(mapper::toBookSearchByTitleReponse)
+                .map(mapper::toBookSearchByTitleResponse)
                 .collectList()
                 .flatMap(books -> {
                     if (books.isEmpty()) {
@@ -47,12 +50,30 @@ public class BookHandler {
                 });
     }
 
+    public Mono<ServerResponse> listenPUTUpdateBook(ServerRequest serverRequest) {
+        var idString = serverRequest.pathVariable("id");
+        if (!idString.matches("^[0-9]+$")) {
+            return ServerResponse.badRequest().build();
+        }
+        var id = Long.parseLong(idString);
+        return serverRequest.bodyToMono(BookUpdateRequest.class)
+                .map(mapper::toBookDomain)
+                .flatMap(book -> bookUseCase.updateBook(id, book))
+                .map(mapper::toBookDetailResponse)
+                .flatMap(ServerResponse.ok()::bodyValue)
+                .switchIfEmpty(ServerResponse.notFound().build())
+                .onErrorResume(BookException.class, error -> ServerResponse.badRequest()
+                        .bodyValue(new ErrorResponse(error.getMessage())));
+    }
+
     public Mono<ServerResponse> listenPOSTCreateBook(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(BookCreateRequest.class)
                 .map(mapper::toBookDomain)
                 .flatMap(bookUseCase::createBook)
-                .map(mapper::toBookSearchByIdResponse)
-                .flatMap(ServerResponse.created(URI.create(""))::bodyValue);
+                .map(mapper::toBookDetailResponse)
+                .flatMap(ServerResponse.created(URI.create(""))::bodyValue)
+                .onErrorResume(BookException.class, error -> ServerResponse.badRequest()
+                        .bodyValue(new ErrorResponse(error.getMessage())));
     }
 
     public Mono<ServerResponse> listenDELETEDeleteBookById(ServerRequest serverRequest) {
@@ -60,8 +81,8 @@ public class BookHandler {
         if (!idString.matches("^[0-9]+$")) {
             return ServerResponse.badRequest().build();
         }
-        var bookId = Long.parseLong(idString);
-        return bookUseCase.deleteBookById(bookId)
+        var id = Long.parseLong(idString);
+        return bookUseCase.deleteBookById(id)
                 .flatMap(value -> {
                     if (value) {
                         return ServerResponse.noContent().build();
@@ -70,10 +91,4 @@ public class BookHandler {
                 });
     }
 
-    public Mono<ServerResponse> listenGETFindAllBooks(ServerRequest serverRequest) {
-        return bookUseCase.findAllBooks()
-                .map(mapper::toBookSearchByIdResponse)
-                .collectList()
-                .flatMap(ServerResponse.ok()::bodyValue);
-    }
 }

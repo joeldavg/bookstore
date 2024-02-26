@@ -16,13 +16,11 @@ public class BookRouter {
     public RouterFunction<ServerResponse> routerFunction(BookHandler handler) {
         return route()
                 .path("/api/bookstore", builder -> builder
-                        .GET("/search/book/{id}", accept(APPLICATION_JSON), handler::listenGETFindBookById)
-                        .GET("/search/books/all", accept(APPLICATION_JSON), handler::listenGETFindAllBooks)
                         .GET("/search/books/", accept(APPLICATION_JSON), handler::listenGETFindBooksContainingTitle)
-                        .DELETE("/delete/book/{id}", accept(APPLICATION_JSON), handler::listenDELETEDeleteBookById)
-                        .PUT("/update/book/{id}", accept(APPLICATION_JSON), handler::listenGETFindBookById)
+                        .GET("/search/book/{id}", accept(APPLICATION_JSON), handler::listenGETFindBookById)
+                        .PUT("/update/book/{id}", accept(APPLICATION_JSON), handler::listenPUTUpdateBook)
                         .POST("/save/book", accept(APPLICATION_JSON), handler::listenPOSTCreateBook)
-                )
+                        .DELETE("/delete/book/{id}", accept(APPLICATION_JSON), handler::listenDELETEDeleteBookById))
                 .build();
     }
 }

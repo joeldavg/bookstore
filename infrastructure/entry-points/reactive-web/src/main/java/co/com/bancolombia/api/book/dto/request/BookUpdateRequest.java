@@ -1,7 +1,6 @@
-package co.com.bancolombia.api.book.dto.response;
+package co.com.bancolombia.api.book.dto.request;
 
-public record BookSearchByIdResponse(
-        long id,
+public record BookUpdateRequest(
         String title,
         String subtitle,
         String authors,

@@ -1,6 +1,6 @@
 package co.com.bancolombia.api.book.dto.response;
 
-public record BookSearchByTitleReponse(
+public record BookSearchByTitleResponse(
         long id,
         String title,
         String subtitle,

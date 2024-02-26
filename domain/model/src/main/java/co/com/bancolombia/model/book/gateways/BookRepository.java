@@ -11,6 +11,5 @@ public interface BookRepository {
     Mono<Book> updateBook(Book bookToUpdate);
     Mono<Book> createBook(Book bookToCreate);
     Mono<Void> deleteBookById(long id);
-    Flux<Book> findALlBooks();
 
 }
