@@ -1,7 +1,7 @@
 package co.com.bancolombia.api;
 
-import co.com.bancolombia.api.book.BookHandler;
-import co.com.bancolombia.api.book.BookRouter;
+import co.com.bancolombia.api.book.rest.BookHandler;
+import co.com.bancolombia.api.book.rest.BookRouter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

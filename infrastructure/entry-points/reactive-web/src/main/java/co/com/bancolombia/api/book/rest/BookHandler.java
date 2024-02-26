@@ -1,4 +1,4 @@
-package co.com.bancolombia.api.book;
+package co.com.bancolombia.api.book.rest;
 
 import co.com.bancolombia.api.book.dto.request.BookCreateRequest;
 import co.com.bancolombia.api.book.dto.request.BookUpdateRequest;
@@ -13,6 +13,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+
+import static co.com.bancolombia.api.book.rest.PathConstants.*;
 
 @Component
 @RequiredArgsConstructor
@@ -71,7 +73,9 @@ public class BookHandler {
                 .map(mapper::toBookDomain)
                 .flatMap(bookUseCase::createBook)
                 .map(mapper::toBookDetailResponse)
-                .flatMap(ServerResponse.created(URI.create(""))::bodyValue)
+                .flatMap(bookCreated -> ServerResponse
+                        .created(URI.create(String.format(SEARCH_BOOK_CREATED_PATH, bookCreated.id())))
+                        .bodyValue(bookCreated))
                 .onErrorResume(BookException.class, error -> ServerResponse.badRequest()
                         .bodyValue(new ErrorResponse(error.getMessage())));
     }
