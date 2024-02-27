@@ -1,47 +1,106 @@
-# Proyecto Base Implementando Clean Architecture
+# Proyecto Bookstore - Implementando Clean Architecture
 
-## Antes de Iniciar
+## Evaluación técnica
 
-Empezaremos por explicar los diferentes componentes del proyectos y partiremos de los componentes externos, continuando con los componentes core de negocio (dominio) y por último el inicio y configuración de la aplicación.
+La Librería de Antioquia requiere ofrecer a sus clientes una aplicación back (servicio REST) para la búsqueda de libros de tecnología.
 
-Lee el artículo [Clean Architecture — Aislando los detalles](https://medium.com/bancolombia-tech/clean-architecture-aislando-los-detalles-4f9530f35d7a)
+Esta debe tener las siguientes funcionalidades:
+1. Exponer la consulta de libros, donde se reciba como parámetro el nombre del libro a consultar y entregue el listado de los libros que contengan el texto ingresado en su nombre.
+2. Exponer la consulta del detalle de un libro, que debe recibir el ID del libro a consultar y entregar la información del libro indicado.
+3. Exponer la actualización, creación y borrado de un libro.
 
-# Arquitectura
+Realizar un diseño de la arquitectura propuesta para la aplicación teniendo en cuenta la arquitectura en la nube, los componentes que consideras deben componer la arquitectura de la aplicación, la conexión entre los mismos, los componentes para exponer el servicio a los consumidores, etc.
 
-![Clean Architecture](https://miro.medium.com/max/1400/1*ZdlHz8B0-qu9Y-QO3AXR_w.png)
+Implementar la aplicación en Java con Spring Boot Reactivo utilizando arquitectura limpia, pruebas unitarias (por lo menos un 30 o 40% de cobertura). Se recomienda tener la información de los libros almacenada en una base de datos y tener conexión con ésta desde el microservicio.
 
-## Domain
+# Solución
 
-Es el módulo más interno de la arquitectura, pertenece a la capa del dominio y encapsula la lógica y reglas del negocio mediante modelos y entidades del dominio.
+### Arquitectura
 
-## Usecases
+[Arquitectura AWS](https://github.com/joeldavg/bookstore/blob/main/readme/bookstore_architecture.drawio.pdf)
 
-Este módulo gradle perteneciente a la capa del dominio, implementa los casos de uso del sistema, define lógica de aplicación y reacciona a las invocaciones desde el módulo de entry points, orquestando los flujos hacia el módulo de entities.
+### Proyecto
 
-## Infrastructure
+Proyecto Bookstore desarrollado con Gradle 8, Java 17 y Spring Boot 3.2.2 stack reactivo.
 
-### Helpers
+Base de datos PostgreSQL (Servicio Render).
 
-En el apartado de helpers tendremos utilidades generales para los Driven Adapters y Entry Points.
+### Instrucciones
 
-Estas utilidades no están arraigadas a objetos concretos, se realiza el uso de generics para modelar comportamientos
-genéricos de los diferentes objetos de persistencia que puedan existir, este tipo de implementaciones se realizan
-basadas en el patrón de diseño [Unit of Work y Repository](https://medium.com/@krzychukosobudzki/repository-design-pattern-bc490b256006)
+1. Clonar repositorio y ubicarse en la rama main.
+2. Configurar `application.yaml` [applications/app-service/src/main/resources/application.yaml].
+3. Ejecutar proyecto con `./gradlew BootRun` o `./gradlew.bat BootRun` en Windows.
+5. Importar colección de Postman ubicada en el directorio [readme/postman].
 
-Estas clases no puede existir solas y debe heredarse su compartimiento en los **Driven Adapters**
+**Nota:** El archivo `application.yaml` contiene configuración por defecto y apunta a la base de datos PostgreSQL alojada en Render.
 
-### Driven Adapters
+### Servicios
 
-Los driven adapter representan implementaciones externas a nuestro sistema, como lo son conexiones a servicios rest,
-soap, bases de datos, lectura de archivos planos, y en concreto cualquier origen y fuente de datos con la que debamos
-interactuar.
+1. #### Encontrar libros que contienen texto en el título
+   **Método**: GET
 
-### Entry Points
+   **URL**:  http://localhost:8080/api/bookstore/search/books/?title={texto}
 
-Los entry points representan los puntos de entrada de la aplicación o el inicio de los flujos de negocio.
+   **Nota**: Ingresar texto como parámetro de consulta.
 
-## Application
+2. #### Encontrar detalle de un libro por ID
+   **Método**: GET
 
-Este módulo es el más externo de la arquitectura, es el encargado de ensamblar los distintos módulos, resolver las dependencias y crear los beans de los casos de use (UseCases) de forma automática, inyectando en éstos instancias concretas de las dependencias declaradas. Además inicia la aplicación (es el único módulo del proyecto donde encontraremos la función “public static void main(String[] args)”.
+   **URL**:  http://localhost:8080/api/bookstore/search/book/{id}
 
-**Los beans de los casos de uso se disponibilizan automaticamente gracias a un '@ComponentScan' ubicado en esta capa.**
+   **Nota**: El ID debe ser un número entero.
+
+3. #### Eliminar libro por ID
+   **Método**: DELETE
+
+   **URL**:  http://localhost:8080/api/bookstore/delete/book/{id}
+
+   **Nota**: El ID debe ser un número entero.
+
+4. #### Crear un nuevo libro
+   **Método**: POST
+
+   **URL**:  http://localhost:8080/api/bookstore/save/book
+
+   **Cuerpo de la solicitud (Ejemplo):**
+
+   ```json
+            {
+              "title": "Code Complete",
+              "subtitle": "A Practical Handbook of Software Construction",
+              "authors": "Steve McConnell",
+              "publisher": "Microsoft Press",
+              "pages": 960,
+              "year": 2004,
+              "rating": 5,
+              "desc": "Code Complete es un libro extenso que cubre todas las etapas del desarrollo de software, desde la planificación hasta el mantenimiento. Escrito por Steve McConnell, este libro es una referencia valiosa para desarrolladores de todos los niveles de experiencia.",
+              "price": 35.00,
+              "image": "code_complete.jpg",
+              "url": "https://www.example.com/books/code-complete"
+            }
+
+
+5. #### Actualizar libro por ID
+   **Método**: PUT
+
+   **URL**:  http://localhost:8080/api/bookstore/update/book/{id}
+
+   **Cuerpo de la solicitud (Ejemplo):**
+
+   ```json
+            {
+              "title": "Code Complete",
+              "subtitle": "A Practical Handbook of Software Construction",
+              "authors": "Steve McConnell",
+              "publisher": "Microsoft Press",
+              "pages": 960,
+              "year": 2004,
+              "rating": 5,
+              "desc": "Code Complete es un libro extenso que cubre todas las etapas del desarrollo de software, desde la planificación hasta el mantenimiento. Escrito por Steve McConnell, este libro es una referencia valiosa para desarrolladores de todos los niveles de experiencia.",
+              "price": 35.00,
+              "image": "code_complete.jpg",
+              "url": "https://www.example.com/books/code-complete"
+            }
+
+
+**By: @joeldavg**
